@@ -1,12 +1,12 @@
 /*
-  Author: Lawrence
-
-*/
+ Author: Lawrence
+ */
 
 // assign meaningful names to those pins that will be used
-#define pinL_Sen A5      //pin A5
-#define pinM_Sen A4       //pin A4
-#define pinR_Sen A2     //pin A2
+#define pinL_Sen A5           //pin A5
+#define pinM_Sen A4           //pin A4
+#define pinR_Sen A3           //pin A3
+#define pinW_Sen A2           //pin A2
 
 #define pinLQ3 3              //pin D3
 #define pinLQ2 4              //pin D4
@@ -25,52 +25,53 @@
 int L_Sen = 1;
 int M_Sen = 1;
 int R_Sen = 1;
+int W_Sen = 1;
 int i = 0;
+//int j = 0;
 
 //the function for different speed
-void Lstopsp(){
+void Lstopsp() {
   digitalWrite(pinLQ3, LOW);
   digitalWrite(pinLQ2, LOW);
   digitalWrite(pinLQ1, LOW);
   digitalWrite(pinLQ0, LOW);
-  
+
 }
-void Rstopsp(){
+void Rstopsp() {
   digitalWrite(pinRQ3, LOW);
   digitalWrite(pinRQ2, LOW);
   digitalWrite(pinRQ1, LOW);
   digitalWrite(pinRQ0, LOW);
 }
 
-void Lfullforwardsp(){
+void Lfullforwardsp() {
   digitalWrite(pinLQ3, HIGH);
   digitalWrite(pinLQ2, HIGH);
   digitalWrite(pinLQ1, HIGH);
   digitalWrite(pinLQ0, HIGH);
- 
+
 }
 
-void Rfullforwardsp(){
+void Rfullforwardsp() {
   digitalWrite(pinRQ3, HIGH);
   digitalWrite(pinRQ2, HIGH);
   digitalWrite(pinRQ1, HIGH);
   digitalWrite(pinRQ0, HIGH);
 }
 
-void Lhalfforwardsp(){
+void Lhalfforwardsp() {
   digitalWrite(pinLQ3, HIGH);
   digitalWrite(pinLQ2, LOW);
   digitalWrite(pinLQ1, LOW);
   digitalWrite(pinLQ0, HIGH);
 }
 
-void Rhalfforwardsp(){
+void Rhalfforwardsp() {
   digitalWrite(pinRQ3, HIGH);
   digitalWrite(pinRQ2, LOW);
   digitalWrite(pinRQ1, LOW);
-  digitalWrite(pinRQ0, HIGH); 
-} 
-
+  digitalWrite(pinRQ0, HIGH);
+}
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -78,6 +79,7 @@ void setup() {
   pinMode(pinL_Sen, INPUT);
   pinMode(pinM_Sen, INPUT);
   pinMode(pinR_Sen, INPUT);
+  pinMode(pinW_Sen, INPUT);
 
   pinMode(pinLQ3, OUTPUT);
   pinMode(pinLQ2, OUTPUT);
@@ -105,85 +107,107 @@ void setup() {
   digitalWrite(pinRdir, LOW);        // LOW:  move backward
 }
 
-void forward() {
-    digitalWrite(pinLdir, HIGH);
-    digitalWrite(pinRdir, HIGH);
-    Lfullforwardsp();
-    Rfullforwardsp();
-  
-}
-
 void halfforward() {
-    digitalWrite(pinLdir, HIGH);
-    digitalWrite(pinRdir, HIGH);
-    Lhalfforwardsp();
-    Rhalfforwardsp();
-  
+  digitalWrite(pinLdir, HIGH);
+  digitalWrite(pinRdir, HIGH);
+  Lhalfforwardsp();
+  Rhalfforwardsp();
+
 }
 
-void left () {
-    digitalWrite(pinLdir, LOW);
-    digitalWrite(pinRdir, HIGH);
-    Lstopsp();
-    Rfullforwardsp();
+void halfbackward() {
+  digitalWrite(pinLdir, LOW);
+  digitalWrite(pinRdir, LOW);
+  Lfullforwardsp();
+  Rfullforwardsp();
+
+}
+
+void left() {
+  digitalWrite(pinLdir, LOW);
+  digitalWrite(pinRdir, HIGH);
+  Lstopsp();
+  Rhalfforwardsp();
 }
 
 void right() {
-    digitalWrite(pinLdir, HIGH);
-    digitalWrite(pinRdir, LOW);
-    Rstopsp();
-    Lfullforwardsp();
+  digitalWrite(pinLdir, HIGH);
+  digitalWrite(pinRdir, LOW);
+  Rstopsp();
+  Lhalfforwardsp();
 }
 
 void hardleft() {
-    digitalWrite(pinLdir, LOW);
-    digitalWrite(pinRdir, HIGH);
-    Lhalfforwardsp();
-    Rhalfforwardsp();
-    delay(160);
+  digitalWrite(pinLdir, LOW);
+  digitalWrite(pinRdir, HIGH);
+  Lhalfforwardsp();
+  Rhalfforwardsp();
+
 }
 
 void hardright() {
-    digitalWrite(pinLdir, HIGH);
-    digitalWrite(pinRdir, LOW);
-    Rhalfforwardsp();
-    Lhalfforwardsp();
-    delay(160);
+  digitalWrite(pinLdir, HIGH);
+  digitalWrite(pinRdir, LOW);
+  Rhalfforwardsp();
+  Lhalfforwardsp();
+
 }
 
 void stopsp() {
-    digitalWrite(pinLdir, HIGH);
-    digitalWrite(pinRdir, HIGH);
-    Lstopsp();
-    Rstopsp();
+  digitalWrite(pinLdir, HIGH);
+  digitalWrite(pinRdir, HIGH);
+  Lstopsp();
+  Rstopsp();
 }
 
 // the loop function runs over and over again forever
 void loop() {
 
-//  leftSensor = digitalRead(pinL);
-//  rightSensor = digitalRead(pinRightSensor);
-
   L_Sen = digitalRead(pinL_Sen);
   M_Sen = digitalRead(pinM_Sen);
   R_Sen = digitalRead(pinR_Sen);
-
-
-   
-  if ( L_Sen && R_Sen ) { //forward
-      halfforward();
-    }
-  
-  if ( L_Sen && !R_Sen ) { // left
-      hardleft();
-    }
-  if ( !L_Sen && R_Sen ) { // right
-      hardright();
-    }
-  if ( !L_Sen && !R_Sen ) { //Y
-      hardleft();
-    }
-
-
+  W_Sen = digitalRead(pinW_Sen);
+//
+//  if ( !W_Sen){
+//    j  += 1;
+//    
+//  }
+//
+//  while (j == 0){
+//    Lstopsp();
+//    Rstopsp();
+//  }
+//  
+//  while ( j == 1){
+      if (L_Sen && !M_Sen && R_Sen) { //forward
+        halfforward();
+      }
+    
+      if (!L_Sen && !M_Sen && R_Sen) { //hardleft
+        hardleft();
+    
+      }
+    
+      if (L_Sen && !M_Sen && !R_Sen) { //hardright
+        hardright();
+    
+      }
+      if (!L_Sen && M_Sen && R_Sen) {  //left
+        left();
+      }
+      if (L_Sen && M_Sen && !R_Sen) {  //right
+        right();
+      }
+    
+      if (!L_Sen && !M_Sen && !R_Sen) {  //maintain forward
+        halfforward();
+      }
+    
+      if (!L_Sen && M_Sen && !R_Sen) {   //tesing 
+    
+        hardleft();
+    
+      }
+ // }
 
 }
