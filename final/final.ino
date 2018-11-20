@@ -179,16 +179,9 @@ void turn(){
     
 
 }
-// the loop function runs over and over again forever
-void loop() {
 
-  L_Sen = digitalRead(pinL_Sen);
-  M_Sen = digitalRead(pinM_Sen);
-  R_Sen = digitalRead(pinR_Sen);
-  W_Sen = digitalRead(pinW_Sen);
-
-
-      if (L_Sen && !M_Sen && R_Sen) { //forward
+void normal() {
+  if (L_Sen && !M_Sen && R_Sen) { //forward
          fullforward();
       }
     
@@ -213,12 +206,46 @@ void loop() {
      }
 
 
-     if (!L_Sen  && M_Sen && !R_Sen  ) {   //tesing 
+     if (!L_Sen  && M_Sen && !R_Sen  ) {   //testing 
         i += 1 ;
         turn();
         delay(250);
          
       }
-  
+      
+}
+// the loop function runs over and over again forever
+void loop() {
+
+  L_Sen = digitalRead(pinL_Sen);
+  M_Sen = digitalRead(pinM_Sen);
+  R_Sen = digitalRead(pinR_Sen);
+  W_Sen = digitalRead(pinW_Sen);
+      if (j == 1) {
+        normal();
+      }
+      if (j == 2) {
+        Lstopsp();
+        Rstopsp();
+        delay(100);
+        halfbackward();
+        delay(650);
+        Lstopsp();
+        Rstopsp();
+        j++;
+      }
+      
+      if (j == 0) {
+        Lstopsp();
+        Rstopsp();
+      }
+    if (!W_Sen) {
+      j++;
+      if (j == 1) {
+        halfforward();
+        delay(250);
+      }
+      delay(250);
+    }
 
 }
