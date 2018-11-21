@@ -200,10 +200,8 @@ void loop() {
     normal();
   }
   if (j == 2) {
-    stopsp();
-    delay(100);
     halfbackward();
-    delay(650);
+    delay(800);
     stopsp();
     j++;
   }    
@@ -213,6 +211,6 @@ void loop() {
       halfforward();
       delay(250);
     }
-    delay(250);
+    delay(100);
   }
 }
