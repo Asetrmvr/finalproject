@@ -49,7 +49,7 @@ void Rstopsp() {
 void Lfullforwardsp() {
   digitalWrite(pinLQ3, HIGH);
   digitalWrite(pinLQ2, HIGH);
-  digitalWrite(pinLQ1, HIGH);
+  digitalWrite(pinLQ1, LOW);
   digitalWrite(pinLQ0, HIGH);
 
 }
@@ -57,7 +57,7 @@ void Lfullforwardsp() {
 void Rfullforwardsp() {
   digitalWrite(pinRQ3, HIGH);
   digitalWrite(pinRQ2, HIGH);
-  digitalWrite(pinRQ1, HIGH);
+  digitalWrite(pinRQ1, LOW);
   digitalWrite(pinRQ0, HIGH);
 }
 
@@ -182,7 +182,7 @@ void normal() {
   if (!L_Sen  && M_Sen && !R_Sen  ) {   //Y 
     i += 1 ;
     turn();
-    delay(250);
+    delay(300);
   }    
 }
 
