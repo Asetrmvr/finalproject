@@ -157,10 +157,10 @@ void stopsp() {
 
 //used for Y-intersections
 void turn(){
-    if ((i == 1)||(i == 2)){
+    if ((i == 0)||(i == 1)){
       hardleft();
     }
-    if(i == 3){
+    if(i == 2){
       hardright();
     }
 }
