@@ -177,13 +177,9 @@ void normal() {
     hardleft();
   }
   if (!L_Sen && ! M_Sen && !R_Sen){ //horizontal line
-    halfforward();
-  }
-  if (!L_Sen  && M_Sen && !R_Sen  ) {   //Y 
-    i += 1 ;
     turn();
-    delay(300);
-  }    
+  }
+ 
 }
 
 // the loop function runs over and over again forever
