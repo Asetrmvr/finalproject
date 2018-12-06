@@ -49,7 +49,7 @@ void Rstopsp() {
 void Lfullforwardsp() {
   digitalWrite(pinLQ3, HIGH);
   digitalWrite(pinLQ2, HIGH);
-  digitalWrite(pinLQ1, LOW);
+  digitalWrite(pinLQ1, HIGH);
   digitalWrite(pinLQ0, HIGH);
 
 }
@@ -57,7 +57,7 @@ void Lfullforwardsp() {
 void Rfullforwardsp() {
   digitalWrite(pinRQ3, HIGH);
   digitalWrite(pinRQ2, HIGH);
-  digitalWrite(pinRQ1, LOW);
+  digitalWrite(pinRQ1, HIGH);
   digitalWrite(pinRQ0, HIGH);
 }
 
@@ -135,19 +135,30 @@ void halfbackward() {
 void hardleft() {
   digitalWrite(pinLdir, LOW);
   digitalWrite(pinRdir, HIGH);
+  Lfullforwardsp();
+  Rfullforwardsp();
+}
+
+void gentleleft() {
+  digitalWrite(pinLdir, LOW);
+  digitalWrite(pinRdir, HIGH);
   Lhalfforwardsp();
   Rhalfforwardsp();
-
 }
 
 void hardright() {
   digitalWrite(pinLdir, HIGH);
   digitalWrite(pinRdir, LOW);
-  Rhalfforwardsp();
-  Lhalfforwardsp();
-
+  Rfullforwardsp();
+  Lfullforwardsp();
 }
 
+void gentleright() {
+  digitalWrite(pinLdir, HIGH);
+  digitalWrite(pinRdir, LOW);
+  Rhalfforwardsp();
+  Lhalfforwardsp();
+}
 void stopsp() {
   digitalWrite(pinLdir, HIGH);
   digitalWrite(pinRdir, HIGH);
@@ -157,32 +168,40 @@ void stopsp() {
 
 //used for Y-intersections
 void turn(){
-    if ((i == 1)||(i == 2)){
+    if ((i == 1)||(i == 2)||(i == 4)){
       hardleft();
     }
-    if(i == 3){
+    if ((i == 3)||(i >= 5)){
       hardright();
     }
 }
 
 //runs throughout the entire track
 void normal() {
-  if (L_Sen && !M_Sen && R_Sen) { //forward
-    fullforward();
+  if (L_Sen && R_Sen) { //forward
+    if ((i < 3)||(i > 4)) fullforward(); 
+    else halfforward();
   }
   if (L_Sen && !R_Sen) { //right
-    hardright();
+    if ((i < 3)||(i > 4))hardright();
+    else
+    gentleright();
   }
   if (!L_Sen && R_Sen) {  //left
-    hardleft();
+    if ((i < 3)||(i > 4))hardleft();
+    else 
+    gentleleft();
   }
   if (!L_Sen && ! M_Sen && !R_Sen){ //horizontal line
     halfforward();
+    delay(100);
   }
   if (!L_Sen  && M_Sen && !R_Sen  ) {   //Y 
-    i += 1 ;
+    i++;
     turn();
-    delay(300);
+    delay(100);
+    halfforward();
+    delay(100);
   }    
 }
 
@@ -196,20 +215,29 @@ void loop() {
   if (j == 0) {
     stopsp();
   }
-  if (j == 1) {
+  if ((j == 1) || (j == 3)) {
     normal();
   }
-  if (j == 2) {
-    halfbackward();
-    delay(800);
-    stopsp();
-    j++;
-  }    
   if (!W_Sen) {
     j++;
     if (j == 1) {
       halfforward();
       delay(250);
+    }
+    if (j == 2) {
+      hardright();
+      delay(750);
+      halfforward();
+      delay(300);
+      normal();
+      j++;
+    }
+    if (j == 4) {
+      stopsp();
+      hardright();
+      delay(750);
+      stopsp();
+      j++;
     }
     delay(100);
   }
